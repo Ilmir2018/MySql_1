@@ -23,12 +23,18 @@ DROP TABLE IF EXISTS `city`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `city` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `country_id` int(11) NOT NULL,
-  `region_id` int(11) NOT NULL,
-  `city` varchar(45) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `id` int(4) NOT NULL AUTO_INCREMENT,
+  `country_id` int(4) NOT NULL,
+  `importand` tinyint(1) DEFAULT NULL,
+  `region_id` int(4) NOT NULL,
+  `title` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `country_id` (`country_id`),
+  KEY `region_id` (`region_id`),
+  KEY `city_ind` (`title`),
+  CONSTRAINT `city_ibfk_1` FOREIGN KEY (`country_id`) REFERENCES `country` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `city_ibfk_2` FOREIGN KEY (`region_id`) REFERENCES `region` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -37,7 +43,7 @@ CREATE TABLE `city` (
 
 LOCK TABLES `city` WRITE;
 /*!40000 ALTER TABLE `city` DISABLE KEYS */;
-INSERT INTO `city` VALUES (1,1,1,'Agruz'),(2,1,1,'Aznakaevo'),(3,1,2,'Wolzsk'),(4,1,2,'Zvenigovo');
+INSERT INTO `city` VALUES (1,1,NULL,1,'Agruz'),(2,1,NULL,1,'Aznakaevo'),(3,1,NULL,2,'Wolzsk'),(4,1,NULL,2,'Zvenigovo');
 /*!40000 ALTER TABLE `city` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -50,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-09 19:12:40
+-- Dump completed on 2018-11-15 13:03:39

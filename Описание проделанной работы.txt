@@ -1,0 +1,67 @@
+CREATE DATABASE IF NOT EXISTS country;
+
+USE country;
+
+CREATE TABLE IF NOT EXISTS `country`(
+`id` INT(4) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+`country` VARCHAR(25) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS `region` (
+`id` INT(4) NOT NULL AUTO_INCREMENT,
+`country_id` int(4) NOT NULL,
+`region` VARCHAR(30) NOT NULL,
+PRIMARY KEY (`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `city` (
+`id` INT(4) NOT NULL AUTO_INCREMENT,
+`country_id` int(4) NOT NULL,
+`region_id` int(4) NOT NULL,
+`city` VARCHAR(30) NOT NULL,
+PRIMARY KEY (`id`)
+);
+
+INSERT INTO `country`.`country` (`country`) VALUES ('Russia');
+INSERT INTO `country`.`country` (`country`) VALUES ('USA');
+INSERT INTO `country`.`country` (`country`) VALUES ('China');
+INSERT INTO `country`.`country` (`country`) VALUES ('India');
+
+
+CREATE INDEX `country_ind` ON `country`(`country`);
+
+ALTER TABLE `country` CHANGE `country` `title` VARCHAR(150);
+
+
+ALTER TABLE `region` CHANGE `region` `title` VARCHAR(150);
+
+ALTER TABLE `region` ADD CONSTRAINT FOREIGN KEY (`country_id`)
+ REFERENCES `country`(`id`)
+ ON DELETE RESTRICT
+ ON UPDATE CASCADE;
+ 
+ ALTER TABLE `city` ADD CONSTRAINT FOREIGN KEY (`country_id`)
+ REFERENCES `country`(`id`)
+ ON DELETE RESTRICT
+ ON UPDATE CASCADE;
+ 
+ ALTER TABLE `city` ADD COLUMN `importand` DATE AFTER `country_id`;
+ 
+ ALTER TABLE `city` CHANGE `importand` `importand` TINYINT(1) AFTER `country_id`;
+ 
+ ALTER TABLE `city` ADD CONSTRAINT FOREIGN KEY (`region_id`)
+ REFERENCES `region`(`id`)
+ ON DELETE RESTRICT
+ ON UPDATE CASCADE; 
+ 
+ ALTER TABLE `city` CHANGE `city` `title` VARCHAR(150);
+
+
+CREATE INDEX `region_ind` ON `region`(`title`);
+
+CREATE INDEX `city_ind` ON `city`(`title`);
+
+
+ALTER TABLE `country` CONVERT TO CHAR SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE `region` CONVERT TO CHAR SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE `city` CONVERT TO CHAR SET utf8mb4 COLLATE utf8mb4_unicode_ci;
