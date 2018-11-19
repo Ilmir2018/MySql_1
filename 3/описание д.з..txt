@@ -1,0 +1,135 @@
+CREATE DATABASE IF NOT EXISTS sotrudniki CHAR SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+USE sotrudniki;
+
+CREATE TABLE IF NOT EXISTS `shtat`(
+`id` INT(4) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+`name` VARCHAR(25) NOT NULL,
+`lastname` VARCHAR(25) NOT NULL,
+`birthday` DATE NOT NULL,
+`doljnost` VARCHAR(25) NOT NULL,
+`otdel` INT(4) NOT NULL,
+`zp` INT(11) NOT NULL
+);
+
+
+INSERT INTO `shtat` (`name`, `lastname`, `birthday`, `doljnost`, `otdel`, `zp`) 
+VALUES ('Рашид', 'Кашапов', '1990-02-1', 'programmist', 1, '190000'),
+('Рашид', 'Кашапов', '1990-02-1', 'programmist', 1, '190000'),
+('Ахмет', 'Каюмов', '1995-04-10', 'programmist', 2, '80000'),
+('Нурсултан', 'Тюлякбаев', '1994-06-1', 'programmist', 2, '70000'),
+('Али', 'Шарапов', '1990-02-18', 'programmist', 3, '45000'),
+('Иван', 'Иванов', '1990-03-26', 'programmist', 3, '50000'),
+('Пётр', 'Петрович', '1990-11-1', 'programmist', 3, '300000'),
+('Тимофей', 'Матвеич', '1990-10-15', 'programmist', 4, '380000'),
+('Игорь', 'Саныч', '1985-06-6', 'programmist', 4, '34000'),
+('Олег', 'Петрович', '1978-07-22', 'programmist', 4, '25000'),
+('Александр', 'Васильев', '1996-08-1', 'programmist', 4, '15000'),
+('Алексей', 'Иванов', '2000-04-15', 'programmist', 4, '80000');
+
+
+CREATE TABLE IF NOT EXISTS `depart`(
+`dep_id` INT(4) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+`name` VARCHAR(25) NOT NULL,
+`kolvo` INT(4) NOT NULL,
+`head` INT(4) NOT NULL
+);
+
+#Создаём индекс для столбца отдел, таблицы штат.
+CREATE INDEX `otdel_ind` ON `shtat`(`otdel`);
+
+#Создаём индекс для столбца отдел, таблицы штат.
+CREATE INDEX `name_ind` ON `depart`(`name`);
+
+#добавляем внешний ключ для столбца otdel зависимый от стобца
+#id таблицы depart при удалении связанных данных запрещать удаление
+ALTER TABLE `shtat` ADD CONSTRAINT FOREIGN KEY (`otdel`)
+ REFERENCES `depart`(`dep_id`)
+ ON DELETE RESTRICT
+ ON UPDATE CASCADE;
+ 
+ 
+INSERT INTO `depart` (`name`, `kolvo`, `head`) 
+VALUES ('Управление', 2, 4),
+('Оборона', 3, 8),
+('Уборка', 0, 0)
+;
+
+SELECT DISTINCT `otdel` FROM `shtat`;
+
+
+USE country;
+
+SELECT * FROM country.city;
+
+SELECT `city`.`id`, `city`.`title` as sity, `region`.`title` , `country`.`title` as country FROM `city`  
+LEFT JOIN`country` ON `city`.`country_id` = `country`.`id`
+LEFT JOIN `region` ON `city`.`region_id` = `region`.`id`
+ WHERE `city`.`id` = 1;
+ 
+SELECT `title`as sity FROM `city` WHERE `region_id` = 1;
+
+USE sotrudniki;
+
+SELECT  `id`, AVG(`zp`) FROM `shtat`;
+SELECT AVG(`zp`), `name` FROM `shtat`  GROUP BY `otdel`;
+
+ SELECT AVG(`zp`), `depart`.`name` FROM `shtat`
+INNER JOIN `depart` ON `shtat`.`otdel` = `depart`.`dep_id`
+WHERE `shtat`.`id` is not NULL
+ GROUP BY `otdel`;
+
+SELECT MAX(`zp`) AS max_salary, concat(`name`, ' ', `lastname`) as full_name
+FROM `shtat` 
+WHERE `zp` is not null
+GROUP BY full_name
+ORDER BY max_salary DESC
+LIMIT 1;
+ 
+DELETE FROM `shtat` WHERE `zp` IS NOT NULL ORDER BY `zp` DESC LIMIT 1;
+  
+SELECT COUNT(`shtat`.`name`), `depart`.`name` FROM `shtat`
+INNER JOIN `depart` ON `shtat`.`otdel` = `depart`.`dep_id`
+WHERE `shtat`.`id` is not NULL
+ GROUP BY `otdel`;
+ 
+SELECT `dep_id`, COUNT(`shtat`.`name`) as 'Кол-во сотрудников', `depart`.`name`,
+ SUM(`zp`) as 'Всего денег' FROM `shtat`
+INNER JOIN `depart` ON `shtat`.`otdel` = `depart`.`dep_id`
+WHERE `shtat`.`id` is not NULL
+ GROUP BY `otdel`;
+
+SELECT concat(`name`, ' ', `lastname`) AS `full_name`, `doljnost`, `zp` 
+FROM `shtat` WHERE `zp` BETWEEN 80000 and 150000;
+
+SELECT * FROM `shtat` WHERE `name` LIKE '%р';
+
+SELECT * FROM `shtat` WHERE `name` REGEXP 'р$';
+
+UPDATE shtat SET `doljnost` = 'Программист' WHERE `otdel` = 1;
+UPDATE shtat SET `doljnost` = 'Тестировщик' WHERE `otdel` = 2;
+UPDATE shtat SET `doljnost` = 'Менеджер' WHERE `otdel` = 3;
+UPDATE shtat SET `doljnost` = 'Уборщик' WHERE `otdel` = 4;
+
+SELECT MAX(`zp`), concat(`name`, ' ', `lastname`) AS `full_name`
+FROM shtat
+WHERE `otdel` = 3
+GROUP BY `full_name`;
+
+SELECT MAX(`zp`) AS max_salary, concat(`name`, ' ', `lastname`) AS `full_name`
+FROM shtat
+WHERE `otdel` = 3
+GROUP BY `full_name`
+HAVING max_salary > 45000;
+
+SELECT MAX(`zp`) AS max_salary, concat(`name`, ' ', `lastname`) AS `full_name`
+FROM shtat
+WHERE `otdel` = 2
+GROUP BY `full_name`
+ORDER BY max_salary DESC
+LIMIT 1;
+
+
+
+
+
