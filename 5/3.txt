@@ -1,0 +1,46 @@
+ EXPLAIN SELECT concat(`name`, ' ', `lastname`) AS `full_name`, `doljnost`, `zp` 
+FROM `shtat` WHERE `zp` BETWEEN 80000 and 150000;
+
+Анализ:
+
+имя таблицы - shtat 
+type. All Для всех комбинаций строк оптимизатор производит полный анализ таблицы. Самый                      
+медленный вариант. 
+● possible_keys. Null
+● key. Null
+● key_len. Null
+● ref. Null
+● rows. 31
+● Extra. Using where 
+
+
+EXPLAIN SELECT AVG(`zp`), `depart`.`name` FROM `shtat`
+INNER JOIN `depart` ON `shtat`.`otdel` = `depart`.`dep_id`
+WHERE `shtat`.`id` is not NULL
+ GROUP BY `otdel`;
+ 
+ Анализ:
+ 
+
+ имя таблицы - depart 
+type. index Тот же ALL, но идет поиск только по дереву индексов. Он быстрее ALL, так как индекс                                  
+почти всегда меньше реальных данных.  
+● possible_keys. PRIMARY индекс указывает на первичный ключ
+● key. name_ind - имя индекса
+● key_len. 102 длинна ключа
+● ref. Null
+● rows. 3  - 3 строки
+● Extra. Using index; Using temporary
+
+ имя таблицы - shtat 
+type. ref. Читаются абсолютно все строки с соответствующими им индексами для всех имеющихся                        
+комбинаций строк. Работает хорошо, когда ключ сопоставлен не всей таблице, а только                        
+нескольким её строкам.   
+● possible_keys. PRIMARY,otdel_ind индекс указывает на первичный ключ
+● key. otdel_ind - имя индекса
+● key_len. 4 длинна ключа
+● ref. sotrudniki.depart.dep_id Показывает столбцы или константы, которые будут использованы с
+ ключом key при  выборке. 
+● rows. 6  - 6 строк
+● Extra. Using index condition
+ 

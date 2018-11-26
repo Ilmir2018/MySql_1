@@ -1,0 +1,36 @@
+Все эти операции являются транзакционными потому что включают в себя несколько запросов,
+объединённых в один.
+
+SET SQL_SAFE_UPDATES = 0;
+SET AUTOCOMMIT = 0;
+
+
+START TRANSACTION;
+SELECT @x := COUNT(`id`) FROM `shtat`;
+UPDATE `shtat` SET `name` = 'Альфред' WHERE `zp` = @x*1000;
+COMMIT;
+
+
+SET SQL_SAFE_UPDATES = 0;
+SET AUTOCOMMIT = 0;
+
+
+START TRANSACTION;
+SELECT @x := 10000;
+UPDATE `shtat` SET `zp` = `zp`+@x WHERE `id` = 1;
+UPDATE `shtat` SET `zp` = `zp`-@x WHERE `id` = 4;
+COMMIT;
+
+
+SET SQL_SAFE_UPDATES = 0;
+SET AUTOCOMMIT = 0;
+
+
+START TRANSACTION;
+INSERT INTO `shtat` (`name`, `lastname`, `birthday`, `doljnost`, `otdel`, `zp`) 
+VALUES ('A', 'A', '1990-02-1', 'programmist', 1, '20000'),
+('B', 'B', '1990-02-1', 'programmist', 1, '20000'),
+('C', 'C', '1995-04-10', 'programmist', 2, '15000'),
+('D', 'D', '1994-06-1', 'programmist', 2, '13000');
+UPDATE `shtat` SET `zp` = 20000 WHERE `zp` > 25000;
+COMMIT;

@@ -1,0 +1,11 @@
+LOCK TABLE `depart` READ;
+
+SELECT * FROM `shtat` WHERE `id` = 4;
+SELECT `name` FROM `shtat` WHERE `id` = 3;
+INSERT INTO `shtat` (`name`, `lastname`, `birthday`, `doljnost`, `otdel`, `zp`) 
+VALUES ('A', 'A', '1990-02-1', 'programmist', 1, '20000');
+
+UNLOCK TABLE;
+
+ EXPLAIN SELECT concat(`name`, ' ', `lastname`) AS `full_name`, `doljnost`, `zp` 
+FROM `shtat` WHERE `zp` BETWEEN 80000 and 150000;
