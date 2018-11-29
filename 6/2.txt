@@ -1,0 +1,201 @@
+> use nov
+switched to db nov
+> db.nov.insert({"name":"Ильмир", "lastname":"Кияметдинов", "doljnost": "program
+mist"})
+WriteResult({ "nInserted" : 1 })
+> db.nov.insert({"name":"Рашид", "lastname":"Кашапов", "doljnost": "programmist"
+, "salary":40000})
+WriteResult({ "nInserted" : 1 })
+> db.nov.find()
+{ "_id" : ObjectId("5bfe6917ac82ef95b9407571"), "name" : "Ильмир", "lastname" :
+"Кияметдинов", "doljnost" : "programmist" }
+{ "_id" : ObjectId("5bfe6955ac82ef95b9407572"), "name" : "Рашид", "lastname" : "
+Кашапов", "doljnost" : "programmist", "salary" : 40000 }
+> db.nov.find()
+{ "_id" : ObjectId("5bfe6917ac82ef95b9407571"), "name" : "Ильмир", "lastname" : "Кияметдинов", "doljnost" : "programmist
+" }
+{ "_id" : ObjectId("5bfe6955ac82ef95b9407572"), "name" : "Рашид", "lastname" : "Кашапов", "doljnost" : "programmist", "s
+alary" : 40000 }
+> db.nov.find("_id" : ObjectId("5bfe6955ac82ef95b9407572"))
+2018-11-28T13:14:57.260+0300 E QUERY    [thread1] SyntaxError: missing ) after argument list @(shell):1:18
+
+> db.nov.find(("_id" : ObjectId("5bfe6955ac82ef95b9407572"))
+...
+... db.nov.find("_id" : ObjectId("5bfe6955ac82ef95b9407572"))
+... db.nov.find(("_id" : ObjectId("5bfe6955ac82ef95b9407572")))
+...
+...
+> db.nov.find(("_id" : ObjectId("5bfe6955ac82ef95b9407572")))
+2018-11-28T13:18:14.230+0300 E QUERY    [thread1] SyntaxError: missing ) in parenthetical @(shell):1:19
+
+> db.nov.find({"_id" : ObjectId("5bfe6955ac82ef95b9407572")})
+{ "_id" : ObjectId("5bfe6955ac82ef95b9407572"), "name" : "Рашид", "lastname" : "Кашапов", "doljnost" : "programmist", "s
+alary" : 40000 }
+> db.nov.find({"name": "Ильмир"})
+{ "_id" : ObjectId("5bfe6917ac82ef95b9407571"), "name" : "Ильмир", "lastname" : "Кияметдинов", "doljnost" : "programmist
+" }
+> db.nov.find({"salary": {$exists: true}})
+{ "_id" : ObjectId("5bfe6955ac82ef95b9407572"), "name" : "Рашид", "lastname" : "Кашапов", "doljnost" : "programmist", "s
+alary" : 40000 }
+> db.nov.find({"name": {$regex:"а"}})
+{ "_id" : ObjectId("5bfe6955ac82ef95b9407572"), "name" : "Рашид", "lastname" : "Кашапов", "doljnost" : "programmist", "s
+alary" : 40000 }
+> db.nov.find({"name": {$regex:"и"}})
+{ "_id" : ObjectId("5bfe6917ac82ef95b9407571"), "name" : "Ильмир", "lastname" : "Кияметдинов", "doljnost" : "programmist
+" }
+{ "_id" : ObjectId("5bfe6955ac82ef95b9407572"), "name" : "Рашид", "lastname" : "Кашапов", "doljnost" : "programmist", "s
+alary" : 40000 }
+> db.nov.update({"name":"Ильмир"}, {$set: {"salary":50000}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.nov.find({"name": "Ильмир"})
+{ "_id" : ObjectId("5bfe6917ac82ef95b9407571"), "name" : "Ильмир", "lastname" : "Кияметдинов", "doljnost" : "programmist
+", "salary" : 50000 }
+> db.nov.update({"name":"Ильмир"}, {$set: {"salary":60000}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.nov.find({"name": "Ильмир"})
+{ "_id" : ObjectId("5bfe6917ac82ef95b9407571"), "name" : "Ильмир", "lastname" : "Кияметдинов", "doljnost" : "programmist
+", "salary" : 60000 }
+> db.nov.update({"name":{$exists:true}}, {$set: {"salary":60000}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 0 })
+> db.nov.find({"name": {$exists:true}})
+{ "_id" : ObjectId("5bfe6917ac82ef95b9407571"), "name" : "Ильмир", "lastname" : "Кияметдинов", "doljnost" : "programmist
+", "salary" : 60000 }
+{ "_id" : ObjectId("5bfe6955ac82ef95b9407572"), "name" : "Рашид", "lastname" : "Кашапов", "doljnost" : "programmist", "s
+alary" : 40000 }
+> db.nov.insert({"nae":"Алия", "lastname":"Валиева", "doljnost": "bugalter", "salary":25000})
+WriteResult({ "nInserted" : 1 })
+> db.nov.find()
+{ "_id" : ObjectId("5bfe6917ac82ef95b9407571"), "name" : "Ильмир", "lastname" : "Кияметдинов", "doljnost" : "programmist
+", "salary" : 60000 }
+{ "_id" : ObjectId("5bfe6955ac82ef95b9407572"), "name" : "Рашид", "lastname" : "Кашапов", "doljnost" : "programmist", "s
+alary" : 40000 }
+{ "_id" : ObjectId("5bfe740aac82ef95b9407573"), "nae" : "Алия", "lastname" : "Валиева", "doljnost" : "bugalter", "salary
+" : 25000 }
+> db.nov.update({"lastname":{$exists:true}}, {$rename: {"nae":"name"}}, true, true)
+WriteResult({ "nMatched" : 3, "nUpserted" : 0, "nModified" : 1 })
+> db.nov.find()
+{ "_id" : ObjectId("5bfe6917ac82ef95b9407571"), "name" : "Ильмир", "lastname" : "Кияметдинов", "doljnost" : "programmist
+", "salary" : 60000 }
+{ "_id" : ObjectId("5bfe6955ac82ef95b9407572"), "name" : "Рашид", "lastname" : "Кашапов", "doljnost" : "programmist", "s
+alary" : 40000 }
+{ "_id" : ObjectId("5bfe740aac82ef95b9407573"), "lastname" : "Валиева", "doljnost" : "bugalter", "salary" : 25000, "name
+" : "Алия" }
+> db.nov.find({"salary": {$lt: 20000}})
+> db.nov.find({salary: {$lt: 20000}})
+> db.nov.find({salary: {$lt: 50000}})
+{ "_id" : ObjectId("5bfe6955ac82ef95b9407572"), "name" : "Рашид", "lastname" : "Кашапов", "doljnost" : "programmist", "s
+alary" : 40000 }
+{ "_id" : ObjectId("5bfe740aac82ef95b9407573"), "lastname" : "Валиева", "doljnost" : "bugalter", "salary" : 25000, "name
+" : "Алия" }
+> db.nov.find({salary: {gt: 20000}})
+> db.nov.find({salary: {$gt: 20000}})
+{ "_id" : ObjectId("5bfe6917ac82ef95b9407571"), "name" : "Ильмир", "lastname" : "Кияметдинов", "doljnost" : "programmist
+", "salary" : 60000 }
+{ "_id" : ObjectId("5bfe6955ac82ef95b9407572"), "name" : "Рашид", "lastname" : "Кашапов", "doljnost" : "programmist", "s
+alary" : 40000 }
+{ "_id" : ObjectId("5bfe740aac82ef95b9407573"), "lastname" : "Валиева", "doljnost" : "bugalter", "salary" : 25000, "name
+" : "Алия" }
+> db.nov.find({salary: {$ne: 10000}})
+{ "_id" : ObjectId("5bfe6917ac82ef95b9407571"), "name" : "Ильмир", "lastname" : "Кияметдинов", "doljnost" : "programmist
+", "salary" : 60000 }
+{ "_id" : ObjectId("5bfe6955ac82ef95b9407572"), "name" : "Рашид", "lastname" : "Кашапов", "doljnost" : "programmist", "s
+alary" : 40000 }
+{ "_id" : ObjectId("5bfe740aac82ef95b9407573"), "lastname" : "Валиева", "doljnost" : "bugalter", "salary" : 25000, "name
+" : "Алия" }
+> db.nov.find({salary: {ine:[10000, 25000]}})
+> db.nov.find({salary: {ine:[10000, 50000]}})
+> db.nov.find({salary: {ine:[40000, 50000]}})
+> db.nov.find({salary: {$in:[10000, 50000]}})
+> db.nov.find({salary: {$in:[25000, 50000]}})
+{ "_id" : ObjectId("5bfe740aac82ef95b9407573"), "lastname" : "Валиева", "doljnost" : "bugalter", "salary" : 25000, "name
+" : "Алия" }
+> db.nov.find({name: {$exists:true}}}
+2018-11-28T16:28:59.556+0300 E QUERY    [thread1] SyntaxError: missing ) after argument list @(shell):1:34
+
+> db.nov.find({"name": {$exists:true}}}
+2018-11-28T16:29:24.025+0300 E QUERY    [thread1] SyntaxError: missing ) after argument list @(shell):1:36
+
+> db.nov.find({"name": {$exists:true}})
+{ "_id" : ObjectId("5bfe6917ac82ef95b9407571"), "name" : "Ильмир", "lastname" : "Кияметдинов", "doljnost" : "programmist
+", "salary" : 60000 }
+{ "_id" : ObjectId("5bfe6955ac82ef95b9407572"), "name" : "Рашид", "lastname" : "Кашапов", "doljnost" : "programmist", "s
+alary" : 40000 }
+{ "_id" : ObjectId("5bfe740aac82ef95b9407573"), "lastname" : "Валиева", "doljnost" : "bugalter", "salary" : 25000, "name
+" : "Алия" }
+> db.nov.update({name: "Ильмир"} {$set: {salary: 70000}})
+2018-11-28T16:32:07.440+0300 E QUERY    [thread1] SyntaxError: missing ) after argument list @(shell):1:31
+
+> db.nov.update({name: "Ильмир"}, {$set: {salary: 70000}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> dv.nov.find()
+2018-11-28T16:32:45.469+0300 E QUERY    [thread1] ReferenceError: dv is not defined :
+@(shell):1:1
+
+> db.nov.find()
+{ "_id" : ObjectId("5bfe6917ac82ef95b9407571"), "name" : "Ильмир", "lastname" : "Кияметдинов", "doljnost" : "programmist
+", "salary" : 70000 }
+{ "_id" : ObjectId("5bfe6955ac82ef95b9407572"), "name" : "Рашид", "lastname" : "Кашапов", "doljnost" : "programmist", "s
+alary" : 40000 }
+{ "_id" : ObjectId("5bfe740aac82ef95b9407573"), "lastname" : "Валиева", "doljnost" : "bugalter", "salary" : 25000, "name
+" : "Алия" }
+> db.nov.update({name: "Алия"}, {$unset: {salary: 25000}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.nov.find()
+{ "_id" : ObjectId("5bfe6917ac82ef95b9407571"), "name" : "Ильмир", "lastname" : "Кияметдинов", "doljnost" : "programmist
+", "salary" : 70000 }
+{ "_id" : ObjectId("5bfe6955ac82ef95b9407572"), "name" : "Рашид", "lastname" : "Кашапов", "doljnost" : "programmist", "s
+alary" : 40000 }
+{ "_id" : ObjectId("5bfe740aac82ef95b9407573"), "lastname" : "Валиева", "doljnost" : "bugalter", "name" : "Алия" }
+> db.nov.update({name: "Алия"}, {$set: {salary: 25000}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.nov.find()
+{ "_id" : ObjectId("5bfe6917ac82ef95b9407571"), "name" : "Ильмир", "lastname" : "Кияметдинов", "doljnost" : "programmist
+", "salary" : 70000 }
+{ "_id" : ObjectId("5bfe6955ac82ef95b9407572"), "name" : "Рашид", "lastname" : "Кашапов", "doljnost" : "programmist", "s
+alary" : 40000 }
+{ "_id" : ObjectId("5bfe740aac82ef95b9407573"), "lastname" : "Валиева", "doljnost" : "bugalter", "name" : "Алия", "salar
+y" : 25000 }
+> mongodump
+2018-11-28T16:37:18.375+0300 E QUERY    [thread1] ReferenceError: mongodump is not defined :
+@(shell):1:1
+
+> mongodump --host localhost --port 22
+2018-11-28T16:39:40.117+0300 E QUERY    [thread1] SyntaxError: missing ; before statement @(shell):1:12
+
+> mongodump --host localhost --port 27017
+2018-11-28T16:39:51.474+0300 E QUERY    [thread1] SyntaxError: missing ; before statement @(shell):1:12
+
+> mongodump --host localhost --port 27017;
+2018-11-28T16:40:03.903+0300 E QUERY    [thread1] SyntaxError: missing ; before statement @(shell):1:12
+
+> mongodump;
+2018-11-28T16:40:14.371+0300 E QUERY    [thread1] ReferenceError: mongodump is not defined :
+@(shell):1:1
+
+> mongodump --out /data/backup/
+2018-11-28T16:40:54.299+0300 E QUERY    [thread1] SyntaxError: missing ; before statement @(shell):1:12
+
+> mongodump --out /var/lib/mongodb/
+2018-11-28T16:48:38.058+0300 E QUERY    [thread1] SyntaxError: missing ; before statement @(shell):1:12
+
+> mongodump --out /var/lib/mongodb;
+2018-11-28T16:50:31.616+0300 E QUERY    [thread1] SyntaxError: missing ; before statement @(shell):1:12
+
+> mongodump --out /var/lib/mongodb/;
+2018-11-28T16:50:38.173+0300 E QUERY    [thread1] SyntaxError: missing ; before statement @(shell):1:12
+
+> mongodump --out /var/lib/mongodb/
+2018-11-28T16:54:35.937+0300 E QUERY    [thread1] SyntaxError: missing ; before statement @(shell):1:12
+
+> cp -r /var/lib/mongodb/ /var/backup
+2018-11-28T16:54:41.813+0300 E QUERY    [thread1] SyntaxError: expected expression, got keyword 'var' @(shell):1:7
+
+> cp -r /var/lib/mongodb/
+2018-11-28T16:55:22.075+0300 E QUERY    [thread1] SyntaxError: expected expression, got keyword 'var' @(shell):1:7
+
+>
+
+
+
+
+
