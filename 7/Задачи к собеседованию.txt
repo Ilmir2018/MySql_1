@@ -1,0 +1,97 @@
+-----------------1---------------------------
+
+CREATE DATABASE IF NOT EXISTS `social_network`;
+USE `social_network`;
+
+CREATE TABLE IF NOT EXISTS `users`(
+`id` INT(4) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+`name` VARCHAR(25) NOT NULL
+);
+
+ALTER TABLE `users` CONVERT TO CHAR SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `likes`(
+`id` INT(4) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+`id_user1` INT(4) NOT NULL,
+`id_user2` INT(4) NOT NULL,
+`like_1` INT(4) NOT NULL,
+`like_2` INT(4) NOT NULL,
+`sum` INT(4) NOT NULL
+);
+
+ALTER TABLE `likes` CONVERT TO CHAR SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+ ALTER TABLE `likes` ADD CONSTRAINT FOREIGN KEY (`id_user1`)
+ REFERENCES `users`(`id`)
+ ON DELETE RESTRICT
+ ON UPDATE CASCADE;
+ 
+  ALTER TABLE `likes` ADD CONSTRAINT FOREIGN KEY (`id_user2`)
+ REFERENCES `users`(`id`)
+ ON DELETE RESTRICT
+ ON UPDATE CASCADE;
+ 
+ 
+ SELECT `users`.`id`, `users`.`name`, `id_user2`, `like_1`, `like_2`, `sum` FROM `likes`
+INNER JOIN `users` ON `users`.`id` = `likes`.`id_user1` OR `users`.`id` = `likes`.`id_user2`
+ WHERE `id_user1` = `users`.`id` ORDER BY `users`.`id` ASC;
+ 
+ 
+ ---------------------2-------------------------
+SELECT `users`.`name`, `likes`.`id_user1` FROM `likes` INNER JOIN
+`users` ON `users`.`id` = `likes`.`id_user1` WHERE `id_user2` = 1 OR `id_user2` = 2  
+AND `id_user2` != 3 AND `like_2` != 0;
+ 
+ -------------------------3------------------------
+ 
+ CREATE TABLE IF NOT EXISTS `like_photo`(
+`id` INT(4) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+`id_photo` INT(4) NOT NULL,
+`id_user` INT(4) NOT NULL,
+`like` TINYINT(1) NOT NULL
+);
+
+
+ ALTER TABLE `like_photo` ADD CONSTRAINT FOREIGN KEY (`id_user`)
+ REFERENCES `users`(`id`)
+ ON DELETE RESTRICT
+ ON UPDATE CASCADE;
+ 
+
+ALTER TABLE `like_photo` CONVERT TO CHAR SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+ 
+ CREATE TABLE IF NOT EXISTS `comment_photo`(
+`id` INT(4) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+`id_user` INT(4) NOT NULL,
+`id_photo` INT(4) NOT NULL,
+`id_comment` INT(4) NOT NULL,
+`like` TINYINT(1) NOT NULL
+);
+
+ALTER TABLE `comment_photo` CONVERT TO CHAR SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+
+ ALTER TABLE `comment_photo` ADD CONSTRAINT FOREIGN KEY (`id_user`)
+ REFERENCES `users`(`id`)
+ ON DELETE RESTRICT
+ ON UPDATE CASCADE;
+ 
+ CREATE INDEX `comment_ind` ON `comment_photo`(`id_comment`);
+ 
+  CREATE INDEX `like_ind` ON `like_photo`(`id_photo`);
+ 
+  ALTER TABLE `comment_photo` ADD CONSTRAINT FOREIGN KEY (`id_photo`)
+ REFERENCES `like_photo`(`id_photo`)
+ ON DELETE RESTRICT
+ ON UPDATE CASCADE;
+ 
+ 
+ 
+ SELECT COUNT(`id`) FROM `like_photo` WHERE `like` != 0 AND `id_photo` = 1;
+
+SELECT `id_photo`, `users`.`name` FROM `like_photo` INNER JOIN
+`users` ON `users`.`id` = `like_photo`.`id_user` WHERE `like` != 0 AND `id_photo` = 1;
+ 
+ 
+ 
