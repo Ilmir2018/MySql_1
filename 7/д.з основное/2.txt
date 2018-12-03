@@ -1,0 +1,8 @@
+ Делаем резервную копию базы
+ mysqldump -u root -p geek1112 > /var/mysql_backups/bak_`date '+%d-%m-%y'`.sql
+
+ Удаляем бузу данных
+ drop schema geek1112;
+
+ возсоздаём из резервной копии базу.
+ mysql -u root -p geek1112 > /var/mysql_backups/bak_3-12-18.sql

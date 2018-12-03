@@ -1,0 +1,7 @@
+#Создание пользователя
+CREATE USER IF NOT EXISTS 'Ilmir'@'%' IDENTIFIED WITH mysql_native_password BY '123123';
+
+#Даём пользователю все права на базу данных Страны и города мира
+GRANT ALL PRIVILEGES ON `country` TO 'Ilmir'@'%' WITH GRANT OPTION;
+
+FLUSH PRIVILEGES;
