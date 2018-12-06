@@ -1,0 +1,39 @@
+ 
+ Установка редиса на сервере.
+ apt-get install redis-server
+ 
+ Заходим в редис.
+redis-cli
+
+
+set geek05:0:int 33 - метод записи ключей
+
+get geek05:0:int - метод считывания ключей
+
+incr geek05:0:int - увеличивает значения ключей
+
+incrby geek05:0:int 14 - увеличивает на 14
+
+decrby geek05:0:int 14 - уменьшает на 14
+
+ttl geek05:0:int - время жизни ключа
+
+expire geek05:0:int 20 - задаём время жизни ключа
+
+append  geek05:1:string ', world!' - добавить к строке
+
+getrange geek05:1:string 7 13 вывести строку с какого то по какое то значение.
+
+setrange  geek05:1:string 14 !! - добавить к строке с символа №...
+
+strlen geek05:1:string - получаем длинну строки
+
+Транзакции открываются командой multi
+
+set geek03:4:int 600
+set geek03:5:int 700
+set geek03:6:int 800
+
+exec - вывод
+
+
